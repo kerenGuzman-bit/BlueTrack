@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="login-page">
+    <div class="login-wrapper">
+        <!-- Columna izquierda: imagen -->
+        <div class="login-image"></div>
+
+        <!-- Columna derecha: formulario -->
+        <div class="login-container">
+            <h2>Inicio de sesión BlueTrack</h2>
+            <form action="{{ url_for('auth.index') }}" method="POST">
+                <p class="error">{{ error }}</p>
+                
+                <label for="usuario">Email</label>
+                <input type="text" id="usuario" name="usuario" required>
+                
+                <label for="contrasena">Contraseña</label>
+                <input type="password" id="contrasena" name="contrasena" required>
+
+                <div class="options">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="recordar">
+                        <label for="recordar">Recordar</label>
+                    </div>
+                    <a href="#">Recuperar contraseña</a>
+                </div>
+
+                <button type="submit">Iniciar</button>
+            </form>
+
+            <p>¿No tienes cuenta? 
+                <a href="{{ url_for('auth.registro') }}">Crear una cuenta</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
