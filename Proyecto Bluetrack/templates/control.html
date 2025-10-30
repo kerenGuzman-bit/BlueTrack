@@ -93,6 +93,70 @@
                 </div>
             </div>
         </div>
+        <section class="dashboard-row">
+    <div class="dashboard-card wide">
+        <div class="card-header">
+            <h2><i class="fas fa-calculator"></i> Analizar Consumo de Agua</h2>
+            <div class="card-value">Compara tu consumo actual con el promedio</div>
+        </div>
+
+        <form action="/control" method="post" class="analisis-form">
+            <div class="form-group">
+                <label for="consumo_actual">Consumo actual (m³):</label>
+                <input type="number" name="consumo_actual" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="promedio">Promedio mensual (m³):</label>
+                <input type="number" name="promedio" step="0.01" required>
+            </div>
+
+            <button type="submit" class="btn-analizar">Analizar</button>
+        </form>
+
+        {% if resultado %}
+        <div class="analisis-card">
+            {% if resultado.estado == "Normal" %}
+            <div class="estado normal">
+                <i class="fas fa-droplet"></i>
+                <h3>Consumo Normal</h3>
+                <p>{{ resultado.mensaje }}</p>
+            </div>
+            {% elif resultado.estado == "Alto" %}
+            <div class="estado alto">
+                <i class="fas fa-tint"></i>
+                <h3>Consumo Elevado</h3>
+                <p>{{ resultado.mensaje }}</p>
+            </div>
+            {% else %}
+            <div class="estado excesivo">
+                <i class="fas fa-water"></i>
+                <h3>Consumo Excesivo</h3>
+                <p>{{ resultado.mensaje }}</p>
+            </div>
+            {% endif %}
+
+            <div class="tips">
+                <h4>💡 Recomendaciones</h4>
+                <ul>
+                    {% for tip in resultado.tips %}
+                    <li>{{ tip }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="estado excesivo">
+            <p>Error: {{ error }}</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+
+
     </main>
 
     <script>

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body id="manual">
-    <!-- Barra de navegación fija -->
+    <!-- Barra de navegación -->
     <nav class="main-nav">
         <div class="nav-container">
             <div class="user-info">
@@ -19,8 +19,7 @@
 
             <ul class="nav-menu">
                 <li class="nav-item"><a href="{{ url_for('paginas.categorias') }}" class="nav-link">Categorías</a></li>
-                <!--<li class="nav-item"><a href="{{ url_for('paginas.reportes') }}" class="nav-link">Reporte Usuarios</a></li>-->
-                <li class="nav-item active"><a href="{{ url_for('paginas.manual') }}" class="nav-link">Manual de Control</a></li>
+                <li class="nav-item active"><a href="{{ url_for('consumo_bp.manual_control') }}" class="nav-link">Manual de Control</a></li>
                 <li class="nav-item"><a href="{{ url_for('paginas.procesos') }}" class="nav-link">Procesos</a></li>
                 <li class="nav-item"><a href="{{ url_for('paginas.comunidad') }}" class="nav-link">Comunidad</a></li>
                 <li class="nav-item"><a href="{{ url_for('paginas.control') }}" class="nav-link">Control Centralizado</a></li>
@@ -47,27 +46,21 @@
                 <h2><i class="fas fa-tint"></i> Agua</h2>
                 <div class="control-cards">
                     <div class="control-card">
-                        <div class="control-icon">
-                            <i class="fas fa-water"></i>
-                        </div>
+                        <div class="control-icon"><i class="fas fa-water"></i></div>
                         <h3>Consumo de Agua semanal</h3>
                         <div class="control-value">120 L</div>
                         <div class="control-description">Consumo diario</div>
                     </div>
                     
                     <div class="control-card">
-                        <div class="control-icon">
-                            <i class="fas fa-cloud-rain"></i>
-                        </div>
+                        <div class="control-icon"><i class="fas fa-cloud-rain"></i></div>
                         <h3>Ahorro o exceso</h3>
                         <div class="control-value">65%</div>
                         <div class="control-description">Nivel óptimo</div>
                     </div>
                     
                     <div class="control-card">
-                        <div class="control-icon">
-                            <i class="fas fa-thermometer-half"></i>
-                        </div>
+                        <div class="control-icon"><i class="fas fa-thermometer-half"></i></div>
                         <h3>Consumo por actividad</h3>
                         <div class="control-value">40%</div>
                         <div class="control-description">Por persona</div>
@@ -79,32 +72,127 @@
             <section class="control-section">
                 <h2><i class="fas fa-calculator"></i> Calcular</h2>
                 <div class="calculation-card">
-                    <div class="alert alert-warning">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Error en el consumo
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="water-input">Ingrese cantidad de agua (L):</label>
-                        <input type="number" id="water-input" class="form-control" placeholder="Ej: 120">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="area-input">Número de personas:</label>
-                        <input type="number" id="area-input" class="form-control" placeholder="Ej: 50">
-                    </div>
 
-                    <div class="form-group">
-                        <label for="area-input">Días del periodo:</label>
-                        <input type="number" id="area-input" class="form-control" placeholder="Ej: 50">
+                    <!-- Formulario Flask -->
+                    <form action="{{ url_for('consumo_bp.manual_control') }}" method="post" class="analisis-form">
+                        <div class="form-group">
+                            <label for="cantidad_agua">Ingrese cantidad de agua (L):</label>
+                            <input type="number" name="cantidad_agua" class="form-control" placeholder="Ej: 120" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="personas">Número de personas:</label>
+                            <input type="number" name="personas" class="form-control" placeholder="Ej: 3" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dias">Días del periodo:</label>
+                            <input type="number" name="dias" class="form-control" placeholder="Ej: 30" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-calculator"></i> Calcular Consumo
+                        </button>
+                    </form>
+
+                    <!-- Resultado del análisis -->
+                    {% if resultado %}
+                    <div class="analisis-card">
+                        {% if resultado.estado == "Normal" %}
+                        <div class="estado normal">
+                            <h3>Consumo Normal</h3>
+                        </div>
+                        {% elif resultado.estado == "Alto" %}
+                        <div class="estado alto">
+                            <h3>Consumo Elevado</h3>
+                        </div>
+                        {% else %}
+                        <div class="estado excesivo">
+                            <h3>Consumo Excesivo</h3>
+                        </div>
+                        {% endif %}
+                        <p>{{ resultado.mensaje }}</p>
+                        <p><strong>Litros por persona/día:</strong> {{ '%.0f'|format(resultado.lppd) }}</p>
+                        <div class="tips">
+                            <h4>💡 Recomendaciones</h4>
+                            <ul>
+                                {% for tip in resultado.tips %}
+                                <li>{{ tip }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                     </div>
-                    
-                    <button class="btn btn-primary btn-block">
-                        <i class="fas fa-calculator"></i> Calcular Consumo
-                    </button>
+                    {% endif %}
+
+                    {% if error %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                    </div>
+                    {% endif %}
                 </div>
             </section>
         </div>
     </main>
+
+    <!-- tu HTML arriba -->
+<script>
+document.getElementById("waterForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const litros = parseFloat(document.getElementById("litros").value);
+  const personas = parseInt(document.getElementById("personas").value);
+  const resultado = document.getElementById("resultado");
+  const nivel = document.getElementById("nivel");
+  const detalle = document.getElementById("detalle");
+  const litrosPorPersona = document.getElementById("litrosPorPersona");
+  const recomendaciones = document.getElementById("recomendaciones");
+
+  if (isNaN(litros) || isNaN(personas) || personas <= 0) {
+    alert("Por favor, ingresa valores válidos.");
+    return;
+  }
+
+  const consumo = litros / personas; // cálculo principal
+  litrosPorPersona.textContent = consumo.toFixed(2);
+
+  resultado.style.display = "block";
+  recomendaciones.innerHTML = "";
+  resultado.className = "analisis-card";
+
+  if (consumo <= 1) {
+    nivel.textContent = "Consumo Normal";
+    detalle.textContent = "Consumo saludable: 1 L por persona/día.";
+    resultado.classList.add("estado", "normal");
+    recomendaciones.innerHTML = `
+      <h4>💡 Recomendaciones</h4>
+      <ul>
+        <li>Mantén los buenos hábitos de ahorro.</li>
+        <li>Reutiliza agua (lavadora, enjuagues) para limpieza de pisos/patios.</li>
+      </ul>`;
+  } else if (consumo <= 3) {
+    nivel.textContent = "Consumo Alto";
+    detalle.textContent = "Estás usando más agua de la recomendada. Reduce tu consumo.";
+    resultado.classList.add("estado", "alto");
+    recomendaciones.innerHTML = `
+      <h4>💧 Recomendaciones</h4>
+      <ul>
+        <li>Verifica fugas o grifos mal cerrados.</li>
+        <li>Reduce el tiempo de ducha a menos de 5 minutos.</li>
+      </ul>`;
+  } else {
+    nivel.textContent = "Consumo Excesivo";
+    detalle.textContent = "El consumo es muy alto. Toma medidas urgentes.";
+    resultado.classList.add("estado", "excesivo");
+    recomendaciones.innerHTML = `
+      <h4>🚨 Recomendaciones</h4>
+      <ul>
+        <li>Evita lavar vehículos con manguera.</li>
+        <li>Implementa recolectores de agua lluvia.</li>
+        <li>Revisa fugas en cisternas o tuberías.</li>
+      </ul>`;
+  }
+});
+</script>
 </body>
 </html>
+

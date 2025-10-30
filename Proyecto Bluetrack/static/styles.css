@@ -1142,4 +1142,191 @@ body#control .light-card .penta-bar {
     body#control .chart-container {
         height: 250px;
     }
+
+}
+/* --------------------------------------------- */
+/* 💧 ESTILOS MEJORADOS PARA LA SECCIÓN DE CÁLCULO EN MANUAL */
+/* --------------------------------------------- */
+
+body#manual .calculation-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  max-width: 700px;
+  margin: 2rem auto;
+  transition: all 0.3s ease;
+}
+
+body#manual .calculation-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Encabezado */
+body#manual .control-section h2 {
+  color: var(--primary-dark);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+body#manual .control-section h2 i {
+  color: var(--primary-color);
+  font-size: 1.3rem;
+}
+
+/* Formularios */
+body#manual .form-group {
+  margin-bottom: 1.2rem;
+}
+
+body#manual .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+body#manual .form-control {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #cde5ff;
+  border-radius: var(--border-radius);
+  background: #f9fcff;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+body#manual .form-control:focus {
+  border-color: var(--primary-color);
+  background: #fff;
+  box-shadow: 0 0 6px rgba(99, 193, 248, 0.3);
+  outline: none;
+}
+
+/* Botón */
+body#manual .btn-primary {
+  display: inline-block;
+  width: 100%;
+  background: linear-gradient(90deg, #63c1f8, #1e88e5);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+body#manual .btn-primary:hover {
+  background: linear-gradient(90deg, #1e88e5, #63c1f8);
+  transform: scale(1.02);
+}
+
+/* Resultado bonito */
+body#manual .analisis-card {
+  background: linear-gradient(180deg, #fafdff 0%, #eef7ff 100%);
+  border: 1px solid #d8ecff;
+  border-radius: 14px;
+  padding: 1.8rem;
+  margin-top: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 50, 100, 0.05);
+  animation: fadeIn 0.5s ease-out;
+}
+
+body#manual .analisis-card h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: #0b3c6c;
+}
+
+/* Colores según estado */
+body#manual .estado.normal h3 {
+  color: #2e7d32; /* verde */
+}
+
+body#manual .estado.alto h3 {
+  color: #f57f17; /* amarillo */
+}
+
+body#manual .estado.excesivo h3 {
+  color: #c62828; /* rojo */
+}
+
+/* Texto dentro de resultado */
+body#manual .analisis-card p {
+  font-size: 0.95rem;
+  color: #2b2b2b;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+/* Bloque de recomendaciones */
+body#manual .tips {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #d7e4ee;
+}
+
+body#manual .tips h4 {
+  color: var(--primary-dark);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+body#manual .tips h4::before {
+  content: "💡";
+  font-size: 1.1rem;
+}
+
+body#manual .tips ul {
+  list-style-type: "💧 ";
+  margin-left: 1.2rem;
+  color: #1a237e;
+}
+
+body#manual .tips li {
+  margin-bottom: 0.3rem;
+  font-size: 0.93rem;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  body#manual .calculation-card {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  body#manual .analisis-card {
+    padding: 1.3rem;
+  }
+
+  body#manual .form-control {
+    font-size: 0.95rem;
+  }
+
+  body#manual .btn-primary {
+    font-size: 0.9rem;
+  }
 }
