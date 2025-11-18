@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidad BlueTrack</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body id="comunicad">
+    <!-- Barra de navegación fija -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="user-info">
+                <img src="{{ url_for('static', filename='agua.png') }}" alt="User Icon">
+                <span>USER</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="{{ url_for('paginas.categorias') }}" class="nav-link">Categorías</a></li>
+                <!--<li class="nav-item"><a href="{{ url_for('paginas.reportes') }}" class="nav-link">Reporte Usuarios</a></li>-->
+                <li class="nav-item"><a href="{{ url_for('paginas.manual') }}" class="nav-link">Manual de Control</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.procesos') }}" class="nav-link">Procesos</a></li>
+                <li class="nav-item active"><a href="{{ url_for('paginas.comunidad') }}" class="nav-link">Comunidad</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.control') }}" class="nav-link">Control Centralizado</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.calculadora') }}" class="nav-link">Calculadora</a></li>
+            </ul>
+            
+            <div class="nav-footer">
+                <span class="support-item">💧 Soporte de Agua</span>
+                <a href="{{ url_for('auth.index') }}" class="close-nav-btn">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="content">
+        <header class="content-header">
+            <h1>Comunicad Agro</h1>
+        </header>
+
+        <div class="community-container">
+            <!-- Tarjeta de Comunidad -->
+            <div class="community-card">
+                <div class="community-header">
+                    <h2><i class="fas fa-seedling"></i>Consumo de agua en los hogares de Bogotá</h2>
+                    <div class="community-location">
+                        <i class="fas fa-map-marker-alt"></i> Teusaquillo, Bogotá
+                    </div>
+                </div>
+                
+                <div class="community-details">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <div class="detail-content">
+                            <h3>Ubicación</h3>
+                            <p>La generación de alertas es también un requisito indispensable: el sistema deberá notificar a los usuarios cuando su consumo sobrepase los límites recomendados o cuando se acerque a niveles considerados excesivos en localidades críticas como Chapinero, Usaquén y Teusaquillo.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="detail-content">
+                            <h3>Economía</h3>
+                            <p>La crisis del agua en Bogotá (86 millones de litros adicionales por día en 2024) exige soluciones tecnológicas sostenibles. Una mala arquitectura comprometería la confiabilidad del sistema, reduciendo su adopción ciudadana.
+</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="community-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">150+</div>
+                        <div class="stat-label">Miembros</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">25</div>
+                        <div class="stat-label">Proyectos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">5 años</div>
+                        <div class="stat-label">Activa</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Otra comunidad (ejemplo de cómo se vería con múltiples comunidades) -->
+            <div class="community-card">
+                <div class="community-header">
+                    <h2><i class="fas fa-tractor"></i>BlueTrack</h2>
+                    <div class="community-location">
+                        <i class="fas fa-map-marker-alt"></i> Bogotá
+                    </div>
+                </div>
+                
+                <div class="community-details">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <div class="detail-content">
+                            <h3>Ubicación</h3>
+                            <p>El sistema debe ofrecer representaciones visuales claras, a través de gráficos dinámicos y comparativos que permitan identificar patrones de consumo, variaciones mensuales y posibles excesos frente a valores de referencia como los promedios de Bogotá o las recomendaciones de la OMS.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="detail-content">
+                            <h3>Economía</h3>
+                            <p>Esta situación genera impactos negativos tanto en la economía de los hogares como en la sostenibilidad ambiental, ya que dificulta la adopción de prácticas responsables en el uso del agua. </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="community-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">80+</div>
+                        <div class="stat-label">Miembros</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Proyectos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">3 años</div>
+                        <div class="stat-label">Activa</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
