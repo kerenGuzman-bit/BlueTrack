@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Ahorro y Consumo de Agua</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body id="control">
+    <!-- Barra de navegación -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="user-info">
+                <img src="{{ url_for('static', filename='agua.png') }}" alt="User Icon">
+                <span>USER</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="{{ url_for('paginas.categorias') }}" class="nav-link">Categorías</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.manual') }}" class="nav-link">Manual de Uso</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.procesos') }}" class="nav-link">Procesos</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.comunidad') }}" class="nav-link">Comunidad</a></li>
+                <li class="nav-item active"><a href="{{ url_for('paginas.control') }}" class="nav-link">Panel de Ahorro</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.calculadora') }}" class="nav-link">Calculadora</a></li>
+            </ul>
+            
+            <div class="nav-footer">
+                <span class="support-item">💧 Soporte de Agua</span>
+                <a href="{{ url_for('auth.index') }}" class="close-nav-btn">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="content">
+        <header class="content-header">
+            <h1>Panel de Consumo y Ahorro de Agua</h1>
+            <p>Monitorea el uso, analiza tus hábitos y optimiza el ahorro de agua en tu hogar o cultivo.</p>
+        </header>
+
+        <div class="dashboard-container">
+            <!-- Fila 1: Consumo general -->
+            <div class="dashboard-row">
+                <!-- Gráfico 1: Consumo mensual -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-line"></i> Consumo Mensual</h2>
+                        <div class="card-value">Total: 12,350 litros</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="consumoChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico 2: Ahorro acumulado -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-leaf"></i> Ahorro Acumulado</h2>
+                        <div class="card-value">Ahorro: 18%</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="ahorroChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fila 2: Distribución y fugas -->
+            <div class="dashboard-row">
+                <!-- Gráfico 3: Distribución del consumo -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-tint"></i> Distribución del Consumo</h2>
+                        <div class="card-value">Uso por actividad</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="distribucionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico 4: Detección de fugas -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-exclamation-triangle"></i> Detección de Fugas</h2>
+                        <div class="card-value">2 fugas detectadas</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="fugasChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Consumo mensual
+        const consumoCtx = document.getElementById('consumoChart').getContext('2d');
+        new Chart(consumoCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                datasets: [{
+                    label: 'Consumo (litros)',
+                    data: [1100, 950, 870, 900, 820, 780, 760, 790, 850, 910, 980, 1000],
+                    backgroundColor: 'rgba(30, 136, 229, 0.6)',
+                    borderColor: 'rgba(30, 136, 229, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Ahorro acumulado
+        const ahorroCtx = document.getElementById('ahorroChart').getContext('2d');
+        new Chart(ahorroCtx, {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Porcentaje de Ahorro (%)',
+                    data: [5, 9, 12, 14, 16, 18],
+                    backgroundColor: 'rgba(76, 175, 80, 0.3)',
+                    borderColor: 'rgba(76, 175, 80, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, max: 30 } }
+            }
+        });
+
+        // Distribución del consumo
+        const distribucionCtx = document.getElementById('distribucionChart').getContext('2d');
+        new Chart(distribucionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Ducha', 'Cocina', 'Lavado de ropa', 'Riego', 'Otros'],
+                datasets: [{
+                    data: [40, 25, 15, 10, 10],
+                    backgroundColor: [
+                        'rgba(33, 150, 243, 0.8)',
+                        'rgba(3, 169, 244, 0.8)',
+                        'rgba(0, 188, 212, 0.8)',
+                        'rgba(77, 182, 172, 0.8)',
+                        'rgba(129, 199, 132, 0.8)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Fugas detectadas
+        const fugasCtx = document.getElementById('fugasChart').getContext('2d');
+        new Chart(fugasCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Baño', 'Cocina', 'Jardín', 'Lavadora', 'Tuberías'],
+                datasets: [{
+                    label: 'Índice de Fugas (%)',
+                    data: [30, 10, 20, 25, 15],
+                    backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                    borderColor: 'rgba(244, 67, 54, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: { suggestedMin: 0, suggestedMax: 50 }
+                }
+            }
+        });
+    });
+
+    const datos = JSON.parse(localStorage.getItem("datosMonitoreoConsumo"));
+
+if (datos) {
+    console.log("Datos disponibles:", datos);
+
+    // EJEMPLO: mostrar total
+    document.getElementById('total-consumo').innerText = datos.totalHuella + " L";
+
+    // EJEMPLO: usar en gráficos
+    const ctx = document.getElementById('grafico-categorias').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Aseo', 'Ropa & Limpieza', 'Alimentación', 'Energía & Riego', 'Transporte'],
+            datasets: [{
+                data: [
+                    datos.aseo,
+                    datos.ropaLimpieza,
+                    datos.alimentacion,
+                    datos.energiaRiego,
+                    datos.transporteHuella
+                ]
+            }]
+        }
+    });
+}
+
+    </script>
+</body>
+</html>

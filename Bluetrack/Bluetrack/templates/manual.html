@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Control - BlueTrack</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- ESTILOS NUEVOS PARA WATERCALCULATOR -->
+    <style>
+        .wc-section {
+            margin-top: 60px;
+            background: #f0f7ff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .wc-section h2 {
+            font-size: 28px;
+            color: #0a5aa1;
+            margin-bottom: 20px;
+        }
+
+        .wc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .wc-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .wc-card:hover {
+            transform: scale(1.03);
+        }
+
+        .wc-card i {
+            font-size: 40px;
+            color: #0a7bd4;
+        }
+
+        .wc-card h3 {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(7px);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-window {
+            width: 600px;
+            max-height: 80vh;
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            animation: modalIn .3s ease;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.25);
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-close {
+            font-size: 28px;
+            cursor: pointer;
+            align-self: flex-end;
+            color: #333;
+        }
+
+        .modal-window h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #0a5aa1;
+        }
+
+        .modal-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 15px;
+            line-height: 1.6;
+        }
+
+        .modal-content a {
+            color: #0a7bd4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .modal-content a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body id="manual">
+
+    <!-- BARRA DE NAVEGACIÓN ORIGINAL -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="user-info">
+                <img src="{{ url_for('static', filename='agua.png') }}" alt="User Icon">
+                <span>USER</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="{{ url_for('paginas.categorias') }}" class="nav-link">Categorías</a></li>
+                <li class="nav-item active"><a href="{{ url_for('paginas.manual') }}" class="nav-link">Manual de Control</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.procesos') }}" class="nav-link">Procesos</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.comunidad') }}" class="nav-link">Comunidad</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.control') }}" class="nav-link">Control Centralizado</a></li>
+                <li class="nav-item"><a href="{{ url_for('paginas.calculadora') }}" class="nav-link">Calculadora</a></li>
+            </ul>
+            
+            <div class="nav-footer">
+                <span class="support-item">💧 Soporte de Agua</span>
+                <a href="{{ url_for('auth.index') }}" class="close-nav-btn">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO ORIGINAL -->
+    <main class="content">
+        <header class="content-header">
+            <h1>Control de Agua</h1>
+        </header>
+
+        <div class="water-control-container">
+            <section class="control-section">
+                <h2><i class="fas fa-tint"></i> Agua</h2>
+                <div class="control-cards">
+
+                    <div class="control-card">
+                    <div class="control-icon"><i class="fas fa-water"></i></div>
+                    <h3>Consumo de Agua semanal</h3>
+                    <div class="control-value" id="weekly-consumption">120 L</div>
+                    <div class="control-description">Consumo diario</div>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon"><i class="fas fa-cloud-rain"></i></div>
+                    <h3>Ahorro o exceso</h3>
+                    <div class="control-value" id="saving-excess">65%</div>
+                    <div class="control-description">Nivel óptimo</div>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon"><i class="fas fa-thermometer-half"></i></div>
+                    <h3>Consumo por actividad</h3>
+                    <div class="control-value" id="activity-consumption">40%</div>
+                    <div class="control-description">Por persona</div>
+                </div>
+
+
+                </div>
+            </section>
+
+            <!--<section class="control-section">
+                <h2><i class="fas fa-calculator"></i> Calcular</h2>
+                <div class="calculation-card">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Error en el consumo
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Ingrese cantidad de agua (L):</label>
+                        <input type="number" class="form-control" placeholder="Ej: 120">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Número de personas:</label>
+                        <input type="number" class="form-control" placeholder="Ej: 50">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Días del periodo:</label>
+                        <input type="number" class="form-control" placeholder="Ej: 50">
+                    </div>
+                    
+                    <button class="btn btn-primary btn-block">
+                        <i class="fas fa-calculator"></i> Calcular Consumo
+                    </button>
+                </div>
+            </section>
+        </div>-->
+
+        <!-- ========================================================= -->
+<!-- ============ SECCIÓN NUEVA WATERCALCULATOR MEJORADA ===== -->
+<!-- ========================================================= -->
+
+<section class="wc-section">
+    <h2><i class="fas fa-leaf"></i> Calculadora</h2>
+
+    <!-- CALCULADORA INTERACTIVA MEJORADA -->
+    <div class="wc-calc-container" style="margin-top:40px;background:#fff;padding:30px;border-radius:16px;box-shadow:0 6px 25px rgba(0,0,0,0.12);">
+        <h3 style="color:#0a5aa1;">Calculadora de Huella Hídrica Personal</h3>
+
+        <!-- SECCIÓN ASEO -->
+        <h4 style="margin-top:20px;color:#0a7bd4;">Aseo Personal</h4>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Minutos promedio de ducha por día:</label>
+            <input id="q_ducha" type="number" min="0" placeholder="Ej: 10" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Veces que lavas tus manos al día:</label>
+            <input id="q_lavado" type="number" min="0" placeholder="Ej: 5" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Veces que te cepillas los dientes al día:</label>
+            <input id="q_cepillo" type="number" min="0" placeholder="Ej: 2" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+
+        <!-- SECCIÓN ROPA & LIMPIEZA -->
+        <h4 style="margin-top:20px;color:#0a7bd4;">Ropa y Limpieza</h4>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Uso semanal de lavadora (ciclos):</label>
+            <input id="q_lavadora" type="number" min="0" placeholder="Ej: 3" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Uso semanal de lavaplatos (ciclos):</label>
+            <input id="q_lavaplatos" type="number" min="0" placeholder="Ej: 2" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Uso semanal de planchado (horas):</label>
+            <input id="q_planchado" type="number" min="0" placeholder="Ej: 1" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Consumo de ropa nueva semanal (prendas):</label>
+            <input id="q_ropa" type="number" min="0" placeholder="Ej: 2" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+
+        <!-- SECCIÓN ALIMENTACIÓN -->
+        <h4 style="margin-top:20px;color:#0a7bd4;">Alimentación</h4>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Consumo semanal de carne (por persona):</label>
+            <input id="q_carne" type="number" min="0" placeholder="Ej: 3" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Frutas y verduras (porciones semanales):</label>
+            <input id="q_fruta" type="number" min="0" placeholder="Ej: 14" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Cantidad de café o té (tazas/semana):</label>
+            <input id="q_cafe" type="number" min="0" placeholder="Ej: 7" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Gasto semanal en comida (COP):</label>
+            <input id="q_gasto" type="number" min="0" placeholder="Ej: 70000" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Productos locales o importados:</label>
+            <select id="q_local" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+                <option value="local">Local</option>
+                <option value="mixto">Mixto</option>
+                <option value="import">Importados frecuentes</option>
+            </select>
+        </div>
+
+        <!-- SECCIÓN ENERGÍA & RIEGO -->
+        <h4 style="margin-top:20px;color:#0a7bd4;">Energía & Riego</h4>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Uso de riego (litros/día aproximado):</label>
+            <input id="q_riego" type="number" min="0" placeholder="Ej: 0" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Consumo promedio de agua asociado a energía (L/día):</label>
+            <input id="q_energia" type="number" min="0" placeholder="Ej: 10" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>¿Recoges agua de lluvia?</label>
+            <select id="q_lluvia" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+                <option value="no">No</option>
+                <option value="si">Sí, parcialmente</option>
+            </select>
+        </div>
+
+        <!-- SECCIÓN TRANSPORTE -->
+        <h4 style="margin-top:20px;color:#0a7bd4;">Transporte</h4>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Consumo semanal en transporte (km):</label>
+            <input id="q_transporte" type="number" min="0" placeholder="Ej: 20" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label>Tipo de transporte (factor multiplicador):</label>
+            <select id="q_transporteTipo" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+                <option value="1">Carro personal</option>
+                <option value="0.7">Bicicleta / Transporte público</option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary btn-block" onclick="finishWizard()" style="margin-top:20px;">
+            <i class="fas fa-calculator"></i> Calcular Huella
+        </button>
+
+        <!-- RESULTADOS -->
+        <div id="final-result" style="margin-top:30px;display:none;">
+            <h4 style="color:#0a5aa1;">Resultado Estimado</h4>
+            <p id="summaryText"></p>
+
+            <div style="display:flex;gap:20px;flex-wrap:wrap;">
+                <canvas id="chartDoughnut"></canvas>
+                <canvas id="chartBar"></canvas>
+            </div>
+
+            <div class="tips" style="margin-top:20px;"></div>
+
+            <!-- Recomendaciones futuras -->
+            <div style="margin-top:30px;background:#eaf4ff;padding:20px;border-radius:12px;">
+                <h4 style="color:#0a7bd4;">Recomendaciones Futuras y Metas</h4>
+                <p>1. Reducir consumo de carne a máximo 2 porciones semanales para disminuir hasta un 20% tu huella hídrica de alimentos.</p>
+                <p>2. Acortar duchas a 5 minutos diarios puede ahorrar 50 L/día.</p>
+                <p>3. Implementar sistemas de recolección de agua de lluvia para riego y limpieza, estimando un ahorro de hasta 30 L/día.</p>
+                <p>4. Optimizar uso de lavadora y lavaplatos combinando cargas completas, reduciendo consumo de 50 a 20 L/día.</p>
+                <p>5. Comprar productos locales y de temporada para reducir agua virtual incorporada.</p>
+                <div style="background:#0a7bd4;height:15px;width:50%;border-radius:8px;margin-top:10px;"></div>
+                <small>Progreso aproximado hacia metas de reducción: 50%</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let chartDoughnutInstance;
+let chartBarInstance;
+
+function finishWizard() {
+    document.getElementById('final-result').style.display = 'block';
+
+    const ducha = parseFloat(document.getElementById('q_ducha').value) || 0;
+    const lavadoManos = parseFloat(document.getElementById('q_lavado').value) || 0;
+    const cepillo = parseFloat(document.getElementById('q_cepillo').value) || 0;
+    const lavadora = parseFloat(document.getElementById('q_lavadora').value) || 0;
+    const lavaplatos = parseFloat(document.getElementById('q_lavaplatos').value) || 0;
+    const planchado = parseFloat(document.getElementById('q_planchado').value) || 0;
+    const ropa = parseFloat(document.getElementById('q_ropa').value) || 0;
+    const carne = parseFloat(document.getElementById('q_carne').value) || 0;
+    const fruta = parseFloat(document.getElementById('q_fruta').value) || 0;
+    const cafe = parseFloat(document.getElementById('q_cafe').value) || 0;
+    const gasto = parseFloat(document.getElementById('q_gasto').value) || 0;
+    const local = document.getElementById('q_local').value;
+    const riego = parseFloat(document.getElementById('q_riego').value) || 0;
+    const energia = parseFloat(document.getElementById('q_energia').value) || 0;
+    const lluvia = document.getElementById('q_lluvia').value;
+    const transporte = parseFloat(document.getElementById('q_transporte').value) || 0;
+    const transporteTipo = parseFloat(document.getElementById('q_transporteTipo').value) || 1;
+
+    // Cálculo de categorías
+    let aseo = ducha*10 + lavadoManos*2 + cepillo*1;
+    let ropaLimpieza = lavadora*50 + lavaplatos*20 + planchado*5 + ropa*30;
+    let alimentacion = carne*300 + fruta*10 + cafe*20 + gasto*0.05;
+    let energiaRiego = riego + energia*5;
+    let transporteHuella = transporte*1.5 * transporteTipo;
+
+    let totalHuella = aseo + ropaLimpieza + alimentacion + energiaRiego + transporteHuella;
+
+    if(local==='local') totalHuella *= 0.9;
+    else if(local==='import') totalHuella *= 1.2;
+    if(lluvia==='si') totalHuella *= 0.85;
+
+    // Actualizar resumen general
+    document.getElementById('summaryText').innerHTML = 
+        `Tu huella hídrica aproximada es <b>${totalHuella.toFixed(0)} litros</b> por semana.`;
+
+    // 🔹 Actualizar “Consumo de Agua semanal”
+    document.getElementById('weekly-consumption').innerText = `${totalHuella.toFixed(0)} L`;
+
+    // 🔹 Calcular porcentaje vs consumo óptimo y cambiar color
+    const consumoOptimo = 150; // litros por semana
+    const porcentaje = (totalHuella / consumoOptimo) * 100;
+    const savingExcessEl = document.getElementById('saving-excess');
+    savingExcessEl.innerText = `${porcentaje.toFixed(0)}%`;
+
+    // Cambiar color según nivel
+    if(porcentaje < 90) savingExcessEl.style.color = 'green';      // ahorro
+    else if(porcentaje <= 110) savingExcessEl.style.color = 'orange'; // nivel medio
+    else savingExcessEl.style.color = 'red';                        // exceso
+
+    // 🔹 “Consumo por actividad”
+    document.getElementById('activity-consumption').innerText = 
+        `${Math.round((aseo + ropaLimpieza + alimentacion) / totalHuella * 100)}%`;
+
+    // Destruir gráficos anteriores
+    if(chartDoughnutInstance) chartDoughnutInstance.destroy();
+    if(chartBarInstance) chartBarInstance.destroy();
+
+    // Crear gráficos
+    chartDoughnutInstance = new Chart(document.getElementById('chartDoughnut').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Aseo', 'Ropa & Limpieza', 'Alimentación', 'Energía & Riego', 'Transporte'],
+            datasets: [{ data: [aseo, ropaLimpieza, alimentacion, energiaRiego, transporteHuella],
+                         backgroundColor: ['#0a7bd4','#2ca3f2','#7ecbff','#cce6ff','#eaf4ff'] }]
+        },
+        options: { responsive:true, plugins:{ legend:{position:'bottom'} } }
+    });
+
+    chartBarInstance = new Chart(document.getElementById('chartBar').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: ['Aseo', 'Ropa & Limpieza', 'Alimentación', 'Energía & Riego', 'Transporte'],
+            datasets: [{ label:'Litros consumidos',
+                         data:[aseo, ropaLimpieza, alimentacion, energiaRiego, transporteHuella],
+                         backgroundColor: ['#0a7bd4','#2ca3f2','#7ecbff','#cce6ff','#eaf4ff'] }]
+        },
+        options: { responsive:true, plugins:{ legend:{display:false} } }
+    });
+    // Guardar datos para la sección "Ver detalles de monitoreo"
+const datosMonitoreo = {
+    aseo: aseo,
+    ropaLimpieza: ropaLimpieza,
+    alimentacion: alimentacion,
+    energiaRiego: energiaRiego,
+    transporteHuella: transporteHuella,
+    totalHuella: totalHuella,
+    porcentaje: porcentaje,
+    actividadPorcentaje: Math.round((aseo + ropaLimpieza + alimentacion) / totalHuella * 100)
+};
+
+localStorage.setItem("datosMonitoreoConsumo", JSON.stringify(datosMonitoreo));
+
+}
+
+</script>
+
+
+
+
+
+</body>
+</html>
